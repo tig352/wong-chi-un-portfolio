@@ -76,3 +76,6 @@
  .hero h1{font-size:36px}.hero h2{font-size:22px}.hero .actions .button{font-size:12px}.hero .intro strong{white-space:normal}
  .award-card{grid-template-columns:64px minmax(0,1fr);column-gap:12px;padding:12px}.award-image{width:64px;height:100px}.award-card h3{font-size:13px}
 }
+
+/* Header navigation after removing the duplicate identity mark. */
+.header nav{margin-left:0;margin-right:auto}
