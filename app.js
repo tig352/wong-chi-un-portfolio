@@ -22,12 +22,11 @@ function render(filter='all'){
     const button=document.createElement('button');button.type='button';button.className='award-image';button.setAttribute('aria-label',(traditional?'放大證書：':'放大证书：')+tr(title));
     const im=document.createElement('img');im.src='assets/'+slug+'.jpg';im.alt=tr(title)+' · '+tr(award);im.loading='lazy';im.width=300;im.height=380;button.append(im);
     button.addEventListener('click',()=>{document.querySelector('#dialog-title').textContent=year+' / '+tr(title);const full=document.querySelector('#dialog-image');full.src=im.src;full.alt=im.alt;document.querySelector('#dialog-download').href='downloads/'+slug+'.pdf';dialog.showModal()});
-    const meta=document.createElement('p');meta.className='award-meta';meta.textContent=year+' / '+tr(cat);
+    const meta=document.createElement('p');meta.className='award-meta';meta.textContent=year;
     const heading=document.createElement('h3');heading.textContent=tr(title);
     const a=document.createElement('p');a.className='award-name';a.textContent=tr(award);
-    const download=document.createElement('a');download.href='downloads/'+slug+'.pdf';download.target='_blank';download.rel='noopener';download.textContent='PDF ↗';download.setAttribute('aria-label',(traditional?'打開證書 PDF：':'打开证书 PDF：')+tr(title));
-    const copy=document.createElement('div');copy.className='award-copy';copy.append(meta,heading,a);
-    card.append(button,copy,download);grid.append(card);
+    const download=document.createElement('a');download.href='downloads/'+slug+'.pdf';download.target='_blank';download.rel='noopener';download.textContent=traditional?'證書 PDF ↗':'证书 PDF ↗';
+    card.append(button,meta,heading,a,download);grid.append(card);
   }
 }
 document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button))});render(button.dataset.filter)}));
