@@ -229,15 +229,19 @@ const words=traditional?{"第十八届宋庆龄少年儿童发明奖": "第十�
 const tr=s=>words[s]||s;
 const grid=document.querySelector('#award-grid');
 const dialog=document.querySelector('#evidence-dialog');
-function render(filter='all'){
+let currentFilter='all';
+const search=document.querySelector('#certificate-search');
+function render(){
   grid.replaceChildren();
-  const selected=items.filter(x=>filter==='all'||x[4]===filter);
+  const query=search.value.trim().toLocaleLowerCase();
+  const selected=items.filter(x=>(currentFilter==='all'||x[4]===currentFilter)&&(!query||x.slice(1).concat(x.slice(1).map(tr)).join(' ').toLocaleLowerCase().includes(query))); 
   document.querySelector('#result-count').textContent=selected.length+(traditional?' 項記錄':' 项记录');
+  if(!selected.length){const empty=document.createElement('p');empty.className='empty-state';empty.textContent=traditional?'沒有符合的記錄，試試其他名稱或年份。':'没有符合的记录，试试其他名称或年份。';grid.append(empty)}
   for(const [slug,year,title,award,cat] of selected){
     const card=document.createElement('article');card.className='award-card';
     const button=document.createElement('button');button.type='button';button.className='award-image';button.setAttribute('aria-label',(traditional?'放大證書：':'放大证书：')+tr(title));
     const im=document.createElement('img');im.src='assets/'+slug+'.jpg?v=certs-5';im.alt=tr(title)+' · '+tr(award);im.loading='lazy';im.width=300;im.height=380;button.append(im);
-    button.addEventListener('click',()=>{document.querySelector('#dialog-title').textContent=year+' / '+tr(title);const full=document.querySelector('#dialog-image');full.src=im.src;full.alt=im.alt;document.querySelector('#dialog-download').href='downloads/'+slug+'.pdf?v=certs-5';dialog.showModal()});
+    button.addEventListener('click',()=>{document.querySelector('#dialog-title').textContent=year+' / '+tr(title);const full=document.querySelector('#dialog-image');full.src=im.src;full.alt=im.alt;document.querySelector('#dialog-download').href='downloads/'+slug+'.pdf?v=certs-5';document.querySelector('#dialog-original').href=im.src;dialog.showModal()});
     const meta=document.createElement('p');meta.className='award-meta';meta.textContent=year;
     const heading=document.createElement('h3');heading.textContent=tr(title);
     const a=document.createElement('p');a.className='award-name';a.textContent=tr(award);
@@ -245,7 +249,8 @@ function render(filter='all'){
     card.append(button,meta,heading,a,download);grid.append(card);
   }
 }
-document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button))});render(button.dataset.filter)}));
+document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(b=>{b.classList.toggle('active',b===button);b.setAttribute('aria-pressed',String(b===button))});currentFilter=button.dataset.filter;render()}));
+search.addEventListener('input',render);
 document.querySelector('#close-dialog').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close()}});
 render();
