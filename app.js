@@ -234,7 +234,7 @@ const search=document.querySelector('#certificate-search');
 function render(){
   grid.replaceChildren();
   const query=search.value.trim().toLocaleLowerCase();
-  const selected=items.filter(x=>(currentFilter==='all'||x[4]===currentFilter)&&(!query||x.slice(1).concat(x.slice(1).map(tr)).join(' ').toLocaleLowerCase().includes(query))); 
+  const selected=items.filter(x=>(currentFilter==='all'||x[4]===currentFilter)&&(!query||x.slice(1).concat(x.slice(1).map(tr)).join(' ').toLocaleLowerCase().includes(query)));
   document.querySelector('#result-count').textContent=selected.length+(traditional?' 項記錄':' 项记录');
   if(!selected.length){const empty=document.createElement('p');empty.className='empty-state';empty.textContent=traditional?'沒有符合的記錄，試試其他名稱或年份。':'没有符合的记录，试试其他名称或年份。';grid.append(empty)}
   for(const [slug,year,title,award,cat] of selected){
